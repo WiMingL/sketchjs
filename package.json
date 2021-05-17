@@ -1,0 +1,21 @@
+{
+  "name": "sketchjs",
+  "version": "1.0.0",
+  "main": "./src/index.js",
+  "license": "Apache",
+  "scripts": {
+    "dev": "webpack-dev-server --open"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "snabbdom": "^3.0.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.26.1",
+    "webpack-cli": "3.3.9",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
