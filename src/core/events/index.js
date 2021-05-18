@@ -14,6 +14,7 @@ function mixinBasicEvents(layer) {
   layer.$container.addEventListener('mousedown', (e) => {
     // 存储原始事件的 event
     layer.$emit('mousedown', new BasicEvent(e))
+    e.preventDefault()
   })
   layer.$container.addEventListener('mousemove', (e) => {
 
@@ -29,6 +30,9 @@ function mixinBasicEvents(layer) {
   document.addEventListener('mouseup', (e) => {
     // 触发 moving 事件，具体执行由事件内部决定
     layer.$emit('_mouseup', new BasicEvent(e))
+  })
+  layer.$container.addEventListener('dragstart', (e) => {
+    console.log('drag start')
   })
 }
 

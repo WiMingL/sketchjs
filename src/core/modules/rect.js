@@ -111,14 +111,120 @@ class Rect extends Geometry {
     }]
   }
 
-  get getControl() {
+  get getControlPoint() {
     let {
       x, y, width, height
     } = this.getArea
     let { rx = 0 } = this.attrs
     return [{
+      x: x,
+      y: y,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 'nw-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, mx, my, mx, my)
+        this.resize(x, y, width, height)
+      }
+    }, {
+      x: x + 1 / 2 * width,
+      y: y,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 'n-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, undefined, my, undefined, my)
+        this.resize(x, y, width, height)
+      }
+    }, {
+      x: x + width,
+      y: y,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 'ne-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, undefined, my, -1 * mx, my)
+        this.resize(x, y, width, height)
+      }
+    }, {
+      x: x + width,
+      y: y + 1 / 2 * height,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 'e-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, undefined, undefined, -1 * mx, undefined)
+        this.resize(x, y, width, height)
+      }
+    }, {
+      x: x + width,
+      y: y + height,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 'se-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, undefined, undefined, -1 * mx, -1 * my)
+        this.resize(x, y, width, height)
+      }
+    }, {
+      x: x + 1 / 2 * width,
+      y: y + height,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 's-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, undefined, undefined, undefined, -1 * my)
+        this.resize(x, y, width, height)
+      }
+    }, {
+      x: x,
+      y: y + height,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 'sw-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, mx, undefined, mx, -1 * my)
+        this.resize(x, y, width, height)
+      }
+    }, {
+      x: x,
+      y: y + 1 / 2 * height,
+      type: 'resize',
+      class: 'operator-resize-point',
+      cursor: 'w-resize',
+      event: (state, mx, my) => {
+        let { attrs, position } = state
+        let {
+          x, y, width, height
+        } = this.resizeHandle(position, mx, undefined, mx, undefined)
+        this.resize(x, y, width, height)
+      }
+    }, {
       x: x + width - rx,
       y: y,
+      type: 'control',
+      class: 'operator-control-point',
       cursor: 'pointer',
       event: (state, mx, my) => {
         let {
@@ -126,7 +232,7 @@ class Rect extends Geometry {
         } = state
         let r = (attrs.rx || 0) + (mx || 0)
         r < 0 ? r = 0 : null
-        r > 1 / 2 * this.attrs.width ? r = 1 / 2 * thia.attrs.width : null
+        r > 1 / 2 * this.attrs.width ? r = 1 / 2 * this.attrs.width : null
         this.attrs.rx = r
       }
     }]

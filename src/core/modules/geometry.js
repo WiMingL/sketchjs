@@ -57,6 +57,10 @@ class Geometry {
     this.isFoucs = false
     this.attrs.style = ''
   }
+
+  get getControl() {
+    return []
+  }
 }
 
 Geometry.uid = 1

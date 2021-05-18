@@ -5,7 +5,7 @@ import { deepClone, isArray, isObject } from "../util/method"
 import { createElement, setAttributeNS } from "../util/web-dom-api"
 import patch from "../vdom/patch"
 import { h } from 'snabbdom/build/h'
-
+import '../css/operator.css'
 
 class Operator {
   constructor(options) {
@@ -21,7 +21,7 @@ class Operator {
     this.$layer = layer
     // 在画布挂载前挂载当前页面到容器中
     layer.hooks.on('beforeMount', () => {
-      console.log('install operator')
+      // console.log('install operator')
       // 注册事件监听，对 layer 中的部分事件进行监听
       this.installEventListener()
       // 挂载元素
@@ -37,7 +37,7 @@ class Operator {
   installEventListener() {
     let layer = this.$layer
     layer.$on('mousedown', (e) => {
-      console.log('down')
+      // console.log('down')
       if (layer.isGeometry(e.target)) {
         // 选中某个元素，激活操作容器
         let id = e.target.getAttribute('id')
@@ -47,12 +47,11 @@ class Operator {
         this.release()
       } else {
         // 其他
-        console.log('other')
+        // console.log('other')
       }
     })
 
     layer.$on('dragstart', (e) => {
-      console.log('dragstart')
       this.startPosition = this.getPosition()
       this.initialState = this.getInitialState()
     })
@@ -132,10 +131,8 @@ class Operator {
     cursorMask && children.push(cursorMask)
     let area = this._renderArea()
     area && children.push(area)
-    let resizes = this._renderResize()
-    resizes && (resizes.length > 0) && (children = children.concat(resizes))
-    let controls = this._renderControl()
-    controls && (controls.length > 0) && (children = children.concat(controls))
+    let points = this._renderControlPoint()
+    children = children.concat(points)
     return h('div.sketch-js-operator', children)
   }
 
@@ -164,7 +161,7 @@ class Operator {
       obj.position = geo.getArea || {}
       state.push(obj)
     })
-    console.log(state)
+    // console.log(state)
     return state
   }
 
@@ -195,7 +192,7 @@ class Operator {
     return null
   }
 
-  // 渲染 resize 点
+  // 渲染 resize 点，已废弃，未来所有的控制点都由 _renderControlPoint 来进行渲染
   _renderResize() {
     let geometry = this.geometry[0]
     let self = this
@@ -209,7 +206,6 @@ class Operator {
           },
           on: {
             mousedown() {
-              console.log('mousedown')
               self.type = 'resize'
               self.event = item.event
               self.setCursorMask(item.cursor)
@@ -221,6 +217,7 @@ class Operator {
     return null
   }
 
+  // 已废弃，未来所有的控制点都由 _renderControlPoint 来进行渲染
   _renderControl() {
     let geometry = this.geometry[0]
     let self = this
@@ -243,6 +240,30 @@ class Operator {
       })
     }
     return null
+  }
+
+  _renderControlPoint() {
+    let geometry = this.geometry[0]
+    let self = this
+    if (this.status === 'active' && geometry) {
+      return geometry.getControlPoint?.map(item => {
+        return h(`div.${item.class}`, {
+          style: {
+            top: item.y + 'px',
+            left: item.x + 'px',
+            cursor: item.cursor
+          },
+          on: {
+            mousedown() {
+              self.type = item.type
+              self.event = item.event
+              self.setCursorMask(item.cursor)
+            }
+          }
+        })
+      })
+    }
+    return []
   }
 }
 
