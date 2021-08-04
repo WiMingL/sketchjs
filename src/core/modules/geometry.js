@@ -24,7 +24,7 @@ class Geometry {
   }
 
   moveTo(x, y) {
-    console.log(x, y)
+    console.warn("You need to define the 'moveto' method of the module")
   }
 
   resizeHandle(position, dx, dy, mx, my) {
@@ -59,7 +59,12 @@ class Geometry {
   }
 
   get getControl() {
+    console.log("You need to define the get function of 'getControl' in this module")
     return []
+  }
+
+  resize() {
+    console.log("You need to define the 'resize' method of the module")
   }
 }
 

@@ -4,6 +4,12 @@ import Geometry from "./geometry";
 class Rect extends Geometry {
   constructor(options) {
     super(options)
+    // 图形模块最好定义 ownAttribute 属性，来定义其拥有的属性，如果你没有该属性，有可能导致 属性面板无法使用
+    this.ownAttribute = ['x', 'y', 'width', 'height', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'rx']
+  }
+
+  hasOwnAttribute(attr) {
+    return this.ownAttribute.includes(attr)
   }
 
   moveTo(x, y) {

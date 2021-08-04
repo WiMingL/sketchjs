@@ -24,6 +24,26 @@ function initState(Layer) {
   }
 
   Layer.prototype._options.plugins = defaultPlugins
+
+  // 注册示例的 api 操作，作为示例的方法
+  Layer.prototype.$installApi = function (api, callback) {
+    let layer = this
+    if (layer.apis[api]) {
+      console.warn('this api has been install!')
+      return false
+    }
+    if (typeof callback !== 'function') {
+      console.warn('callback must be a function')
+      return false
+    }
+    layer.apis[api] = callback
+    return true
+  }
+
+  Layer.prototype.$uninstallApi = function (api) {
+    this.apis[api] ? this.apis[api] = undefined : null
+    return true
+  }
 }
 
 // init geometry modules related function

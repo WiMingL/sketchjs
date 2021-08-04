@@ -15,6 +15,7 @@ function mixinInit(Layer) {
     // uid ++
     layer.id = Layer.uid++
     layer.config = layer.$options.config
+    layer.apis = {}
     layer.__watcher__ = new Watcher({
       layer,
       cb() {
@@ -85,13 +86,14 @@ function observeGeometry(layer) {
 }
 
 function initHooks(layer) {
-  layer.hooks = {}
-  layer.hooks.beforeMount = []
-  layer.hooks.mounted = []
-  layer.hooks.beforeUpdate = []
-  layer.hooks.updated = []
-  layer.hooks.beforeCreate = []
-  layer.hooks.created = []
+  layer.hooks = {
+    beforeMount: [],
+    mounted: [],
+    beforeUpdate: [],
+    updated: [],
+    beforeCreate: [],
+    created: []
+  }
   Object.defineProperty(layer.hooks, 'on', {
     get() {
       return function (hook, callback) {

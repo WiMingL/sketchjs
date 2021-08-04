@@ -19,6 +19,7 @@ class Operator {
   // install 方法用于注册插件时自动执行
   install(layer) {
     this.$layer = layer
+    layer.$operator = this
     // 在画布挂载前挂载当前页面到容器中
     layer.hooks.on('beforeMount', () => {
       // console.log('install operator')
@@ -34,6 +35,7 @@ class Operator {
     })
   }
 
+  // 注册事件监听
   installEventListener() {
     let layer = this.$layer
     layer.$on('mousedown', (e) => {
@@ -44,7 +46,8 @@ class Operator {
         this.active(layer.getGeometryById(id))
       } else if (layer.isCanvas(e.target)) {
         // 点击画布，释放当前容器
-        this.release()
+        // this.release()
+        this.selectCanvas()
       } else {
         // 其他
         // console.log('other')
@@ -77,6 +80,12 @@ class Operator {
     this.cursor = cursor
   }
 
+  selectCanvas() {
+    // 释放被选中的元素
+    this.release()
+    this.$layer.$emit('blur')
+  }
+
   active(geometry) {
     if (isArray(geometry)) {
       this.geometry = geometry
@@ -85,11 +94,18 @@ class Operator {
     }
 
     if (this.geometry.length === 1) {
-      this.type = 'move'
-      this.status = 'active'
-      this.geometry[0].foucs()
-      this._update()
+      this.activeGeometry()
     }
+  }
+
+  activeGeometry() {
+    this.type = 'move'
+    this.status = 'active'
+    this.geometry[0].foucs()
+    this._update()
+    this.$layer.$emit('focus', {
+      selected: this.geometry
+    })
   }
 
   moveGeometry(e) {
